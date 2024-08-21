@@ -1,0 +1,87 @@
+{% extends 'base/base.html' %}
+
+{% block body %}
+{% if orders %}
+<div class="container mt-5">
+    <h2>Your Orders</h2>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" href="#">Orders</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Buy Again</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Not Yet Shipped</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Cancelled Orders</a>
+        </li>
+    </ul>
+    <div class="mt-3">
+        {% for order in orders %}
+        <div class="card mb-3">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-6">
+                        <strong>Order Placed:</strong> {{ order.order_date_ist }}
+                    </div>
+                    <div class="col-md-6 text-right">
+                        <strong>Total:</strong> ${{ order.total_price }}
+                        <br>
+                        <strong>Ship To:</strong> 
+                        <div class="dropdown d-inline-block">
+                            <span class="dropdown-toggle" id="dropdownMenuLink{{ forloop.counter }}" data-bs-toggle="dropdown" aria-expanded="false" style="cursor:pointer;">
+                                {{ order.delivery_address.full_name }}
+                            </span>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink{{ forloop.counter }}" style="width: 200px;">
+                                <li class="dropdown-item-text">{{ order.delivery_address.full_name }}</li>
+                                <li class="dropdown-item-text">{{ order.delivery_address.street }}</li>
+                                <li class="dropdown-item-text">{{ order.delivery_address.city }}, {{ order.delivery_address.state }}</li>
+                                <li class="dropdown-item-text">{{ order.delivery_address.zip_code }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                       <a href="#"> <img src="/{{ order.product.products_images.first.image }}" class="img-fluid" alt="{{ order.product.product_name }}"></a>
+                    </div>
+                    <div class="col-md-10">
+                        <h5>{{ order.product.product_name }}</h5>
+                        <p>Status: {{ order.status }}</p>
+                        <p>Expected Delivery Date: {{ order.delivery_date }}</p>
+                        <a href="#" class="btn btn-primary">Track package</a>
+                        <a href="#" class="btn btn-secondary">Get product support</a>
+                        <a href="#" class="btn btn-secondary">Return or replace items</a>
+                        <a href="#" class="btn btn-secondary">Leave seller feedback</a>
+                        <a href="#" class="btn btn-secondary mt-2">Leave delivery feedback</a>
+                        <a href="#" class="btn btn-secondary mt-2">Write a product review</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+ <div>
+<center><a href="/"><img src="/static/images/miss.png" alt="Empty Cart" style="height:350px; background:transparent;" class="img-fluid"></a></center>
+
+<center>
+    <a href="{% url "shop" %}" class="btn btn-outline-primary">
+        Continue Shopping
+      </a>
+</center>
+   
+ </div>
+{% endif %}
+{% endblock body %}
+
+<script>
+    $(document).ready(function(){
+        $('.dropdown-toggle').dropdown();
+    });
+</script>

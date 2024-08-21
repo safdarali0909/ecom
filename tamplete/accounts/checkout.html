@@ -1,0 +1,280 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+<style>
+    .payment-method {
+        margin-top: 20px;
+    }
+    .order-summary {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-top: 20px;
+    }
+    .order-summary .title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    .btn-payment {
+        background-color: #ffce00;
+        border: none;
+    }
+    .disabled {
+        color: #aaa;
+    }
+    .section-title {
+        font-weight: bold;
+        color: #e47911;
+    }
+    .address-details, .payment-section {
+        margin-bottom: 20px;
+    }
+    .apply-button {
+        margin-left: 10px;
+    }
+    .upi-id-input {
+        display: none;
+        margin-top: 10px;
+    }
+    .change-address-btn {
+        margin-left: 10px;
+        color: #007bff;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+</style>
+
+<div class="container ">
+    <div class="row">
+        <!-- Delivery Address Section -->
+        <div class="col-12">
+            <h5 class="section-title">1. Delivery address</h5>
+            {% if delivery_address %}
+            <div class="address-details border-bottom">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <p>{{ delivery_address.full_name }}<br>{{ delivery_address.street }}<br>{{ delivery_address.city }}<br>{{ delivery_address.state }} {{ delivery_address.zip_code }}<br>
+                            <a href="#">Add delivery instructions</a>
+                        </p>
+                    </div>
+                    <div class="align-self-center mb-5">
+                        <button class="btn btn-secondary" id="changeAddressBtn">Change</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="addressModal" tabindex="-1" aria-labelledby="addressModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addressModalLabel">All Addresses</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- Address List -->
+                            {% if addresses %}
+                                <ul class="list-group">
+                                    {% for address in addresses %}
+                                        <li class="list-group-item">
+                                            {{ address.full_name }}<br>
+                                            {{ address.street }}<br>
+                                            {{ address.city }}<br>
+                                            {{ address.state }} {{ address.zip_code }}<br>
+                                            <a href="#">Add delivery instructions</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <p>No addresses found.</p>
+                            {% endif %}
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Get the button and modal elements
+                    const changeAddressBtn = document.getElementById('changeAddressBtn');
+                    const addressModal = new bootstrap.Modal(document.getElementById('addressModal'));
+            
+                    // Add event listener to the button
+                    changeAddressBtn.addEventListener('click', function() {
+                        // Show the modal
+                        addressModal.show();
+                    });
+                });
+            </script>
+            
+            {% else %}
+                <div class="address-form">
+                    <form method="POST" class="needs-validation" novalidate>
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label">Full Name:</label>
+                            <input type="text" class="form-control" id="full_name" name="full_name" required>
+                            <div class="invalid-feedback">
+                                Please provide a full name.
+                            </div>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="street" class="form-label">Street:</label>
+                            <input type="text" class="form-control" id="street" name="street" required>
+                            <div class="invalid-feedback">
+                                Please provide a street.
+                            </div>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="city" class="form-label">City:</label>
+                            <input type="text" class="form-control" id="city" name="city" required>
+                            <div class="invalid-feedback">
+                                Please provide a city.
+                            </div>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="state" class="form-label">State:</label>
+                            <input type="text" class="form-control" id="state" name="state" required>
+                            <div class="invalid-feedback">
+                                Please provide a state.
+                            </div>
+                        </div>
+    
+                        <div class="mb-3">
+                            <label for="zip_code" class="form-label">Zip Code:</label>
+                            <input type="text" class="form-control" id="zip_code" name="zip_code" required>
+                            <div class="invalid-feedback">
+                                Please provide a zip code.
+                            </div>
+                        </div>
+    
+                        <button type="submit" class="btn btn-primary">Add Address</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    
+    <script>
+        // Example starter JavaScript for disabling form submissions if there are invalid fields
+        (function () {
+            'use strict'
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+    
+    <div class="row">
+        <!-- Payment Method Section -->
+        <div class="col-md-8">
+            <form method="POST" >
+                {% csrf_token %}
+                <!-- Hidden Input Field for Product ID -->
+                <input type="hidden" name="product_id" value="{{ product.uid }}">
+                
+                <div class="payment-section">
+                    <h5 class="section-title">2. Select a payment method</h5>
+                    <div class="form-group">
+                        <label for="available-balance">Your available balance</label>
+                        <input type="text" id="available-balance" class="form-control w-50 d-inline" placeholder="Enter Code">
+                        <button class="btn btn-primary apply-button">Apply</button>
+                    </div>
+                    <div class="payment-method">
+                        <h5>Another payment method</h5>
+                        <div class="form-group">
+                            <input type="radio" id="credit-card" name="payment_method" onclick="toggleUPIInput(false)">
+                            <label for="credit-card">Credit or debit card</label>
+                            <div class="ml-4">
+                                <img src="https://img.icons8.com/color/48/000000/visa.png" alt="Visa">
+                                <img src="https://img.icons8.com/color/48/000000/mastercard.png" alt="MasterCard">
+                                <img src="https://img.icons8.com/color/48/000000/amex.png" alt="Amex">
+                                <img src="https://img.icons8.com/color/48/000000/rupay.png" alt="Rupay">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" id="net-banking" name="payment_method" checked onclick="toggleUPIInput(false)">
+                            <label for="net-banking">Net Banking</label>
+                            <select class="form-control w-50 ml-3" name="bank">
+                                <option>HDFC Bank</option>
+                                <!-- Add other banks as options here -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="radio" id="other-upi" name="payment_method" onclick="toggleUPIInput(true)">
+                            <label for="other-upi"> UPI </label>
+                            <div class="upi-id-input">
+                                <input type="text" id="upi_id" name="upi_id" class="form-control w-50" placeholder="Enter UPI ID">
+                                <button class="btn btn-secondary verify-button mt-2">Verify</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" id="emi" name="payment_method">
+                            <label for="emi">EMI </label>
+                        </div>
+                        <div class="form-group">
+                            <input type="radio" id="cod" name="payment_method">
+                            <label for="cod">Cash on Delivery</label>
+                        </div>
+                        <button type="submit" class="btn btn-payment">Use this payment method</button>
+                    </div>
+                    <!-- Place Order Button -->
+                    <div class="mt-4 text-right">
+                      <center>  <button type="submit" class="btn btn-success" name="place_order">Place Order</button></center>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Order Summary Section -->
+         {% if cartItems %}
+        <div class="col-md-4">
+            {% for item  in cartItems  %}
+            <div class="order-summary">
+                <div class="title">Order Summary</div>
+                <p> Item Name:{{item.product.product_name}}</p>
+                <p> Total Items Cost: {{item.get_total_price}}</p>
+                {% comment %} <p>Delivery: --</p>
+                <p>Total: --</p>
+                <p>Promotion Applied: --</p>
+                <div class="title">Order Total: --</div>
+                <a href="#" class="text-primary">How are delivery costs calculated?</a> {% endcomment %}
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="order-summary">
+                <div class="title">Order Summary</div>
+                <p>No items in cart.</p>
+                <a href="#">Add products to cart</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleUPIInput(show) {
+        const upiInput = document.querySelector('.upi-id-input');
+        if (show) {
+            upiInput.style.display = 'block';
+        } else {
+            upiInput.style.display = 'none';
+        }
+    }
+</script>
+
+{% endblock body %}

@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+<div class="card-body d-flex">
+    <form method="get" class="form-inline d-inline-flex mr-auto">
+        <label for="category">Category</label>
+        <select name="category" id="category" class="ml-2 form-control" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+                <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+        </select>
+    </form>
+</div>
+
+<div class="container mt-5 pt-5">
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-3">
+                <a href="{% url 'get_products' product.slug %}">
+                    <figure class="card card-product-grid">
+                        <div class="img-wrap">
+                            <img src="/{{ product.products_images.first.image }}">
+                        </div>
+                        <figcaption class="info-wrap border-top">
+                            <center><b>{{ product.product_name }}</b></center>
+                            <div class="price mt-2"><center>₹{{ product.price }}</center></div>
+                        </figcaption>
+                    </figure>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

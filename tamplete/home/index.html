@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+{% extends "base/base.html" %}
+
+{% block body %}
+<style>
+    {% comment %} body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        overflow: hidden;
+    } {% endcomment %}
+    
+    .slider-container {
+        margin-top:40px;
+        width: 100vw;
+        height: 460px; /* Adjusted height for the slider */
+        overflow: hidden;
+        position: relative;
+        background-color: transparent;
+    }
+    
+    .slider {
+        display: flex;
+        height: 100%;
+        position: relative;
+    }
+    
+    .slide {
+        flex: 0 0 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: opacity 0.5s ease-in-out;
+        opacity: 0;
+        background: transparent;
+        background-size: contain; /* Ensures the image fits within the container */
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+    
+    .slide.active {
+        opacity: 1;
+        position: relative;
+    }
+    
+    .content {
+        position: absolute;
+        width: 390px;
+        top: 20%;
+        left: 90px;
+        color: black;
+        font-size: 30px;
+        text-align: center;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        opacity: 0; /* Initially hidden */
+        animation: fadeIn 1s ease-in-out; /* Apply fade-in animation */
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .slide.active .content {
+        animation: fadeIn 1s ease-in-out forwards; /* Apply animation when active */
+    }
+    
+    .content button.shop-now {
+        margin-top: 20px;
+        padding: 10px 20px;
+        font-size: 18px;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    
+    .content button.shop-now:hover {
+        background-color: #0056b3;
+    }
+    
+    .controls {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        transform: translateY(-50%);
+    }
+    
+    .controls button {
+        border: none;
+        color: black;
+        font-size: 30px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        background:transparent;
+        {% comment %} margin-left:2.5px; {% endcomment %}
+        
+
+    }
+    
+    .controls button:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    @media (max-width: 768px){
+        .content {
+            position: absolute;
+            width: 290px;
+            top: 20%;
+            {% comment %} left: 90px; {% endcomment %}
+             margin-left:-68px;
+            color: rgba(0,0,0,0.6);
+            font-size: 10px;
+            text-align: center;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            opacity: 0; /* Initially hidden */
+            animation: fadeIn 1s ease-in-out; /* Apply fade-in animation */
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide.active .content {
+            animation: fadeIn 1s ease-in-out forwards; /* Apply animation when active */
+        }
+        
+        .content button.shop-now {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .content button.shop-now:hover {
+            background-color: #0056b3;
+        }
+    }
+</style>
+<div class="slider-container">
+    <div class="slider">
+        <div class="slide active" style="background-image: url('/static/images/items/4.png');">
+            <div class="content">
+                <h2>I Phone X</h2>
+                <p style="font-size:20px">I Phone X 4GB and 128GB White Color at just $29,999 </p>
+                <a href=""><button class="shop-now">Shop Now</button></a>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('/static/images/items/7-removebg-preview.png');">
+            <div class="content">
+                <h2>Samsung Galaxy Watch 4</h2>
+                <p style="font-size:20px">Samsung Galaxy Watch 4 14inch Display with Super Amoled Display at just $14,999.</p>
+                <a href=""><button class="shop-now">Shop Now</button></a>
+            </div>
+        </div>
+        <div class="slide" style="background-image: url('/static/images/items/comp.png');">
+            <div class="content">
+                <h2>Apple Desk 4</h2>
+                <p style="font-size:20px">New Product from Apple Buy Just in $3,49,000</p>
+                <a href=""><button class="shop-now">Shop Now</button></a>
+            </div>
+        </div>
+    </div>
+    <div class="controls">
+        <button class="prev"><i class="fas fa-chevron-left"></i></button>
+        <button class="next" style=" margin-right:10px;"><i class="fas fa-chevron-right"></i></button>
+    </div>
+</div> 
+<div class="image-container">
+<script>
+        const slides = document.querySelectorAll('.slide');
+        const prevButton = document.querySelector('.prev');
+        const nextButton = document.querySelector('.next');
+        let currentIndex = 0;
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                if (i === index) {
+                    slide.classList.add('active');
+                }
+            });
+        }
+
+        nextButton.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        });
+
+        prevButton.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+            showSlide(currentIndex);
+        });
+
+        // Auto-play slider
+        setInterval(() => {
+            currentIndex = (currentIndex + 1) % slides.length;
+            showSlide(currentIndex);
+        }, 5000); // Change slide every 5 seconds
+    </script>
+ <!-- ============================ COMPONENT 2 ================================= -->
+<div class="container mt-5 pt-5" >
+    <div class="row">
+        
+        {% for product in products %}
+          <a href="{% url 'get_products' product.slug  %}">
+            <div class="col-md-3">
+                <figure class="card card-product-grid ">
+                    <div class="img-wrap"> <img src="{{product.products_images.first.image}}"> </div>
+                    <figcaption class="info-wrap border-top">
+                        <a href="#" class="title"><center><b>{{product.product_name}}</b></center></a>
+                        <div class="price mt-2"><center>₹{{product.price}}</center></div> <!-- price-wrap.// -->
+                    </figcaption>
+                </figure> <!-- card // -->
+            </div> 
+        </a>
+        {% endfor %}
+        <!-- col.// -->
+        
+    </div>
+
+</div>
+
+<!-- ============================ COMPONENT 3 ================================= -->
+
+{% endblock body %}
+

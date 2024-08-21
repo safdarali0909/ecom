@@ -1,0 +1,222 @@
+{% extends "base/base.html" %}
+
+{% block body %}
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            color: #333;
+        }
+
+        .about-section {
+            padding: 80px 0;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+
+        .about-section h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #222;
+        }
+
+        .about-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .team-section {
+            padding: 50px 0;
+            background-color: #fff;
+        }
+
+        .team-section h3 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            color: #222;
+            text-align: center;
+        }
+
+        .team-member {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .team-member img {
+            width: 100%;
+            max-width: 150px;
+            height: auto;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member img:hover {
+            transform: scale(1.1);
+        }
+
+        .team-member h5 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .team-member span {
+            font-size: 1rem;
+            color: #888;
+        }
+
+        .mission-section {
+            padding: 50px 0;
+            background-color: white;
+            color: #343a40;
+            text-align: center;
+        }
+
+        .mission-section h3 {
+            font-size: 2.4rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .mission-section p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-section {
+            padding: 50px 0;
+            background-color: white;
+            color: #343a40;
+            text-align: center;
+        }
+
+        .cta-section h4 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section a {
+            font-size: 1.2rem;
+            color: white;
+            padding: 10px 30px;
+            background-color: #0056b3;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-section a:hover {
+            background-color: #003d80;
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .about-section h2 {
+                font-size: 2.2rem;
+            }
+
+            .about-section p {
+                font-size: 1rem;
+                line-height: 1.6;
+            }
+
+            .team-section h3,
+            .mission-section h3 {
+                font-size: 2rem;
+            }
+
+            .team-member h5 {
+                font-size: 1.1rem;
+            }
+
+            .team-member span {
+                font-size: 0.9rem;
+            }
+
+            .cta-section h4 {
+                font-size: 1.8rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .about-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .about-section p {
+                font-size: 0.9rem;
+            }
+
+            .team-section h3,
+            .mission-section h3 {
+                font-size: 1.8rem;
+            }
+
+            .team-member h5 {
+                font-size: 1rem;
+            }
+
+            .team-member span {
+                font-size: 0.8rem;
+            }
+
+            .cta-section h4 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>We are a leading eCommerce platform committed to providing the best shopping experience. Our mission is to offer high-quality products, unbeatable prices, and top-notch customer service to make your shopping easy, enjoyable, and rewarding.</p>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <div class="container">
+            <h3>Meet Our Team</h3>
+            <div class="row">
+                <div class="col-md-4 col-sm-6 col-xs-12 team-member">
+                    <img src="/static/images/avatars/avatar2.jpg" alt="John Doe">
+                    <h5>John Doe</h5>
+                    <span>CEO & Founder</span>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12 team-member">
+                    <img src="/static/images/avatars/avatar1.jpg" alt="Jane Smith">
+                    <h5>Jane Smith</h5>
+                    <span>Chief Technology Officer</span>
+                </div>
+                <div class="col-md-4 col-sm-6 col-xs-12 team-member">
+                    <img src="/static/images/avatars/avatar3.jpg" alt="Mike Johnson">
+                    <h5>Mike Johnson</h5>
+                    <span>Chief Marketing Officer</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission-section">
+        <div class="container">
+            <h3>Our Mission</h3>
+            <p>We aim to create an exceptional shopping experience by offering a wide range of products, a user-friendly platform, and outstanding customer support. Our goal is to make online shopping more accessible and enjoyable for everyone.</p>
+        </div>
+    </section>
+
+    <!-- Call to Action Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h4>Ready to Shop?</h4>
+            <a href="{% url 'shop' %}">Start Shopping Now</a>
+        </div>
+    </section>
+{% endblock body %}

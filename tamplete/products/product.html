@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+{% extends "base/base.html" %}
+
+{% block body %}
+<section class="section-content padding-y bg">
+    <div class="container-fluid">
+    
+    <!-- ============================ COMPONENT 1 ================================= -->
+    <div class="card">
+        <div class="row no-gutters">
+            <aside class="col-sm-12 col-md-6">
+                <article class="gallery-wrap"> 
+                    <div class="img-big-wrap">
+                        <div> <a href="#"><img id="mainImage" src="/{{product.products_images.first.image}}" class="img-fluid"></a></div>
+                    </div> <!-- slider-product.// -->
+                    <div class="thumbs-wrap">
+                        {% for image in product.products_images.all %}
+                          <a href="javascript:void(0);" class="item-thumb" onclick="changeImage('{{ image.image }}')"> 
+                            <img src="/{{image.image}}" class="img-fluid">
+                          </a>
+                        {% endfor %}
+                    </div> <!-- slider-nav.// -->
+                </article> <!-- gallery-wrap .end// -->
+            </aside>
+            <main class="col-sm-12 col-md-6 border-left">
+                <article class="content-body">
+                    <h2 class="title">{{product.product_name}}</h2>
+    
+                    <div class="rating-wrap my-3">
+                        <ul class="rating-stars">
+                            <li style="width:80%" class="stars-active"> 
+                                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                <i class="fa fa-star"></i> 
+                            </li>
+                            <li>
+                                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                <i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+                                <i class="fa fa-star"></i> 
+                            </li>
+                        </ul>
+                        <small class="label-rating text-muted">132 reviews</small>
+                        <small class="label-rating text-success"> <i class="fa fa-clipboard-check"></i> 154 orders </small>
+                    </div> <!-- rating-wrap.// -->
+    
+                    <div class="mb-3"> 
+                      <var class="price h4">₹
+                        {% if updated_price %}
+                            {{ updated_price }}
+                        {% else %}
+                            {{ product.price }}
+                        {% endif %}
+                      </var>
+                    </div> <!-- price-detail-wrap .// -->
+    
+                    <p>{{product.product_discription}}</p>
+    
+                    <dl class="row">
+                      <dt class="col-sm-3">Model#</dt>
+                      <dd class="col-sm-9">Odsy-1000</dd>
+                      <dt class="col-sm-3">Color</dt>
+                      <dd class="col-sm-9">White</dd>
+    
+                      <dt class="col-sm-3">Delivery</dt>
+                      <dd class="col-sm-9">Russia, USA, and Europe </dd>
+
+                      <dt class="col-sm-3">Delivery Date</dt>
+                      <dd class="col-sm-9">{{ delivery_date|date:"F d, Y" }}</dd>
+                    </dl>
+    
+                    <hr>
+                    <div class="form-row">
+                        <div class="form-group col-md flex-grow-0">
+                            <label>Quantity</label>
+                            <div class="input-group mb-3 input-spinner">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-light" type="button" id="button-plus"> + </button>
+                                </div>
+                                <input type="text" class="form-control" value="1">
+                                <div class="input-group-append">
+                                    <button class="btn btn-light" type="button" id="button-minus"> − </button>
+                                </div>
+                            </div>
+                        </div> <!-- col.// -->
+                        {% if product.size_variant.all %}
+                        <div class="form-group col-md">
+                            <label>Select size</label>
+                            <div class="mt-1">
+                                {% for size in product.size_variant.all %}
+                                    <label class="custom-control custom-radio custom-control-inline">
+                                        <input type="radio" onchange="get_corect_price('{{size.size_name}}')" name="select_size" {% if selected_size == size.size_name %} checked {% endif %} class="custom-control-input">
+                                        <div class="custom-control-label">{{size.size_name}}</div>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+    
+                    <a href="" class="btn btn-primary">Buy now</a>
+                    <a href="{% url 'add_to_cart' product.uid %}?variant={{selected_size}}" class="btn btn-outline-primary"> <span class="text">Add to cart</span> <i class="fas fa-shopping-cart"></i></a>
+                </article> <!-- product-info-aside .// -->
+            </main> <!-- col.// -->
+        </div> <!-- row.// -->
+    </div> <!-- card.// -->
+    <!-- ============================ COMPONENT 1 END .// ================================= -->
+
+    </div>
+</section>
+
+<script>
+    function get_corect_price(size) {
+        window.location.href = window.location.pathname + `?size=${size}`;
+    }
+
+    function changeImage(imageUrl) {
+        document.getElementById("mainImage").src = '/' + imageUrl;
+    }
+</script>
+{% endblock body %}

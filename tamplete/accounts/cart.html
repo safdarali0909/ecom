@@ -1,0 +1,97 @@
+{% extends "base/base.html" %}
+{% load static %}
+
+{% block body %}
+{% include "base/alerts.html" %}
+{% if cartItems %}
+<section class="section-content padding-y">
+    <div class="container">
+        <div class="row">
+            <main class="col-12 col-lg-8 mb-4">
+                <div class="card">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-shopping-cart">
+                            <thead class="text-muted">
+                                <tr class="small text-uppercase">
+                                    <th scope="col">Delete</th>
+                                    <th scope="col">Image</th>
+                                    <th scope="col">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in cartItems %}
+                                <tr>
+                                    <td>
+                                        <a href="{% url 'remove_cart_item' item.uid %}" class="btn btn-light">
+                                            <i class="fa fa-trash"></i>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <img src="/{{item.product.products_images.first.image}}" class="img-fluid img-thumbnail" alt="Product Image" style="max-width: 80px;">
+                                    </td>
+                                    <td>
+                                        <a href="#" class="text-dark">{{ item.product.product_name }}</a>
+                                    </td>
+                                    <td>${{ item.product.price }}</td>
+                                    <td>
+                                        <form id="quantity-form-{{ item.uid }}" action="{% url 'update_cart_item_quantity' item.uid %}" method="POST">
+                                            {% csrf_token %}
+                                            <input type="number" name="quantity" class="form-control" value="{{ item.quantity }}" min="1" onchange="this.form.submit();">
+                                        </form>
+                                    </td>
+                                    <td>${{ item.get_total_price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+            <aside class="col-12 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="text-uppercase"><strong>Coupon</strong></h5>
+                        <form>
+                            <div class="form-group">
+                                <label>Enter your coupon code if you have one.</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Coupon code">
+                                    <span class="input-group-append">
+                                        <button class="btn btn-primary btn-block">Apply Coupon</button>
+                                    </span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="text-uppercase"><strong>Cart Totals</strong></h5>
+                        <dl class="dlist-align">
+                            <dt>Cart Total:</dt>
+                            <dd class="text-right"><b>${{cart_total}}</b></dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Shipping Charge:</dt>
+                            {% comment %} <dd class="text-right">Flat Rate</dd> {% endcomment %}
+                            <dd class="text-right"><a href="#" style="color:black"><b>+${{ flat_rate_shipping }}</b></a></dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Total:</dt>
+                            <dd class="text-right h5"><strong style="color:green">${{ cart_total_plus_shipping }}</strong></dd>
+                        </dl>
+                        <hr>
+                        <a href="{% url 'chceckout' %}" class="btn btn-primary btn-block">Proceed to Checkout</a>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</section>
+{% else %}
+<center><a href="/"><img src="/static/images/empty-cart.jpg" alt="Empty Cart" style="height:450px;" class="img-fluid"></a></center>
+{% endif %}
+{% endblock body %}
